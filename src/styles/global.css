@@ -12,9 +12,7 @@
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
 	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
-		rgba(var(--gray), 33%);
+	--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
 }
 @font-face {
 	font-family: "Atkinson";
@@ -152,4 +150,31 @@ hr {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+/* src/styles/global.css */
+
+/* 1. Reset the container padding */
+.astro-code {
+	padding: 1rem 0 !important; /* Keep vertical padding, kill horizontal */
+	overflow-x: auto;
+}
+
+/* 2. Force the code element to be a grid */
+.astro-code code {
+	display: grid; /* Makes lines act like rows in a spreadsheet */
+	min-width: 100%; /* Ensures it expands if text is long */
+}
+
+/* 3. Style the lines */
+.astro-code .line {
+	display: block;
+	padding: 0 1.5rem; /* Move the horizontal padding here */
+	border-left: 4px solid transparent; /* Reserve space for the marker */
+}
+
+/* 4. The Highlight Style */
+.astro-code .line.highlighted {
+	background-color: rgba(255, 255, 255, 0.1); /* The highlight color */
+	border-left-color: #bd93f9; /* The purple marker color */
 }

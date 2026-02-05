@@ -1,0 +1,75 @@
+---
+title: 'Notes on Prototypical Networks'
+description: 'Analyzing metric-based approaches for few-shot classification.'
+pubDate: 'Feb 05 2026'
+---
+
+import ResearchNote from '../../components/ResearchNote.jsx';
+
+## The Core Idea
+
+Prototypical Networks learn a metric space where classification can be performed by computing distances to prototype representations of each class.
+
+In a $N$-way $K$-shot setting, we are given a small support set $S$ of $N$ labeled examples. The goal is to compute a **prototype** $c_k$ for each class $k$.
+
+<ResearchNote title="Definition: Class Prototype">
+  The prototype $c_k$ is simply the mean vector of the embedded support points belonging to class $k$:
+  
+  $$
+  c_k = \frac{1}{|S_k|} \sum_{(x_i, y_i) \in S_k} f_\phi(x_i)
+  $$
+  
+  Where $f_\phi$ is the embedding neural network.
+</ResearchNote>
+
+## Distance Metric
+
+Once we have the prototypes, classification for a new query point $x$ is done by finding the nearest prototype. We typically use the squared Euclidean distance:
+
+$$
+d(x, c_k) = || f_\phi(x) - c_k ||^2
+$$
+
+The probability distribution over classes is then given by the softmax over distances:
+
+$$
+p_\phi(y=k|x) = \frac{\exp(-d(f_\phi(x), c_k))}{\sum_{k'} \exp(-d(f_\phi(x), c_{k'}))}
+$$
+
+## Implementation Detail
+
+One key detail often missed in papers is how we handle the distance calculation efficiently in PyTorch without loops.
+
+```python {11-12}
+def euclidean_dist(x, y):
+    # x: N x D
+    # y: M x D
+    n = x.size(0)
+    m = y.size(0)
+    d = x.size(1)
+    assert d == y.size(1)
+
+    x = x.unsqueeze(1).expand(n, m, d)
+    y = y.unsqueeze(0).expand(n, m, d)
+
+    # Highlighting the actual distance calculation:
+    return torch.pow(x - y, 2).sum(2)
+```
+
+<ResearchNote title="Personal Observation"> While the original paper suggests Euclidean distance, I found that strictly normalizing the embeddings (Cosine Similarity) often stabilizes training in data-scarce scenarios, specifically when the domain shift is large. </ResearchNote>
+
+
+### Key Things to Notice:
+
+1.  **The Import:** `import ResearchNote from ...`
+      * This looks exactly like a React component import. The path `../../` is used because the blog posts are inside `src/content/blog/`, so we have to go up two levels to find `src/components/`.
+2.  **The Mix:** You have standard Markdown headers (`##`), LaTeX math (`$$`), React components (`<ResearchNote>`), and code blocks (`python`) all in one file.
+3.  **The Component:** Notice how we passed the `title` prop and put the content inside the opening/closing tags. That content becomes the `children` prop in your React component.
+
+### Next Step
+
+Your blog now handles **Structure (Astro)**, **Math (LaTeX)**, and **Interactivity (React/MDX)**.
+
+The last missing piece for a "Paper Quality" blog is **Code Highlighting**. Right now, that python block above probably looks like plain text.
+
+**Would you like to install "Shiki" to make your code blocks look like they do in VS Code (with themes and line numbers)?**

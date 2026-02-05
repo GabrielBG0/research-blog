@@ -26,7 +26,16 @@ export default defineConfig({
 
   // 2. ADD THIS MARKDOWN CONFIGURATION
   markdown: {
+    // 1. Keep your Math plugins
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
+
+    // 2. Add this NEW Shiki configuration
+    shikiConfig: {
+      // Choose a theme: 'dracula', 'github-dark', 'night-owl', etc.
+      theme: "dracula",
+      // Prevents horizontal scrolling on mobile
+      wrap: true,
+    },
   },
 });
