@@ -12,6 +12,10 @@ import vercel from "@astrojs/vercel";
 // 1. IMPORT THE MATH PLUGINS
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import {
+  transformerMetaHighlight,
+  transformerNotationDiff,
+} from "@shikijs/transformers";
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,9 +37,13 @@ export default defineConfig({
     // 2. Add this NEW Shiki configuration
     shikiConfig: {
       // Choose a theme: 'dracula', 'github-dark', 'night-owl', etc.
-      theme: "dracula",
+      theme: "synthwave-84",
       // Prevents horizontal scrolling on mobile
       wrap: true,
+      transformers: [
+        transformerMetaHighlight(),
+        transformerNotationDiff(),
+      ],
     },
   },
 });

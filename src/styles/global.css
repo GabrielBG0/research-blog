@@ -174,7 +174,11 @@ hr {
 }
 
 /* 4. The Highlight Style */
+/* 4. The Highlight Style */
 .astro-code .line.highlighted {
-	background-color: rgba(255, 255, 255, 0.1); /* The highlight color */
-	border-left-color: #bd93f9; /* The purple marker color */
+  /* Yellowish marker color with transparency */
+  background-color: rgba(255, 222, 100, 0.15); 
+  /* Matching solid marker border */
+  border-left-color: #ffd60a;
+
 }
