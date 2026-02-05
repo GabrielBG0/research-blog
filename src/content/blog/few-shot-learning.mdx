@@ -12,6 +12,8 @@ Prototypical Networks learn a metric space where classification can be performed
 
 In a $N$-way $K$-shot setting, we are given a small support set $S$ of $N$ labeled examples. The goal is to compute a **prototype** $c_k$ for each class $k$.
 
+Diffusion models were originally proposed by Sohl-Dickstein et al.[^1] and later improved by Ho et al.[^2].
+
 <ResearchNote title="Definition: Class Prototype">
   The prototype $c_k$ is simply the mean vector of the embedded support points belonging to class $k$:
   
@@ -56,7 +58,9 @@ def euclidean_dist(x, y):
     return torch.pow(x - y, 2).sum(2)
 ```
 
-<ResearchNote title="Personal Observation"> While the original paper suggests Euclidean distance, I found that strictly normalizing the embeddings (Cosine Similarity) often stabilizes training in data-scarce scenarios, specifically when the domain shift is large. </ResearchNote>
+<ResearchNote title="Personal Observation"> While the original paper suggests Euclidean distance, 
+I found that strictly normalizing the embeddings (Cosine Similarity) often stabilizes training in 
+data-scarce scenarios, specifically when the domain shift is large. </ResearchNote>
 
 
 ### Key Things to Notice:
@@ -73,3 +77,6 @@ Your blog now handles **Structure (Astro)**, **Math (LaTeX)**, and **Interactivi
 The last missing piece for a "Paper Quality" blog is **Code Highlighting**. Right now, that python block above probably looks like plain text.
 
 **Would you like to install "Shiki" to make your code blocks look like they do in VS Code (with themes and line numbers)?**
+
+[^1]: Sohl-Dickstein, J., et al. "Deep Unsupervised Learning using Nonequilibrium Thermodynamics." ICML, 2015.
+[^2]: Ho, J., et al. "Denoising Diffusion Probabilistic Models." NeurIPS, 2020.

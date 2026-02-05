@@ -12,6 +12,7 @@ import vercel from "@astrojs/vercel";
 // 1. IMPORT THE MATH PLUGINS
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from 'remark-gfm';
 import {
   transformerMetaHighlight,
   transformerNotationDiff,
@@ -31,7 +32,7 @@ export default defineConfig({
   // 2. ADD THIS MARKDOWN CONFIGURATION
   markdown: {
     // 1. Keep your Math plugins
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkGfm],
     rehypePlugins: [rehypeKatex],
 
     // 2. Add this NEW Shiki configuration
@@ -45,5 +46,6 @@ export default defineConfig({
         transformerNotationDiff(),
       ],
     },
+
   },
 });
