@@ -1,12 +1,17 @@
 ---
 import { SITE_TITLE } from "../consts";
 import HeaderLink from "./HeaderLink.astro";
-import { GraduationCap, Github, Mail } from "lucide-react";
+import { GraduationCap, Github, Mail, Sun, Moon } from "lucide-react";
 ---
 
 <header>
   <nav>
-    <h2><a href="/">{SITE_TITLE}</a></h2>
+    <h2>
+      <a href="/">
+        <img src="/StarHeader.svg" alt="" class="site-logo" />
+        {SITE_TITLE}
+      </a>
+    </h2>
     <div class="internal-links">
       <HeaderLink href="/">Home</HeaderLink>
       <HeaderLink href="/blog">Blog</HeaderLink>
@@ -33,15 +38,36 @@ import { GraduationCap, Github, Mail } from "lucide-react";
         <span class="sr-only">Go to my GitHub profile</span>
         <Github />
       </a>
+      <button
+        id="theme-toggle"
+        aria-label="Toggle dark mode"
+        class="theme-toggle"
+      >
+        <span class="icon-sun"><Sun aria-hidden="true" /></span>
+        <span class="icon-moon"><Moon aria-hidden="true" /></span>
+      </button>
     </div>
   </nav>
 </header>
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+  }
+</script>
+
 <style>
   header {
     margin: 0;
     padding: 0 1em;
-    background: white;
-    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    background: var(--surface);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
   h2 {
     margin: 0;
@@ -51,6 +77,22 @@ import { GraduationCap, Github, Mail } from "lucide-react";
   h2 a,
   h2 a.active {
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .site-logo {
+    height: 1.2em;
+    width: auto;
+    filter: brightness(0);
+  }
+  :global([data-theme="dark"]) .site-logo {
+    filter: brightness(0) invert(1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .site-logo {
+      filter: brightness(0) invert(1);
+    }
   }
   nav {
     display: flex;
@@ -59,7 +101,7 @@ import { GraduationCap, Github, Mail } from "lucide-react";
   }
   nav a {
     padding: 1em 0.5em;
-    color: var(--black);
+    color: var(--text);
     border-bottom: 4px solid transparent;
     text-decoration: none;
   }
@@ -74,8 +116,48 @@ import { GraduationCap, Github, Mail } from "lucide-react";
 
   .social-links {
     display: flex;
+    align-items: center;
     margin-right: 2rem;
   }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* Light mode: show sun in yellow, hide moon */
+  .icon-sun {
+    display: flex;
+    color: #f59e0b;
+  }
+  .icon-moon {
+    display: none;
+  }
+
+  /* Dark mode: hide sun, show moon in light blue */
+  :global([data-theme="dark"]) .icon-sun {
+    display: none;
+  }
+  :global([data-theme="dark"]) .icon-moon {
+    display: flex;
+    color: #cce7ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .icon-sun {
+      display: none;
+    }
+    :global(:root:not([data-theme="light"])) .icon-moon {
+      display: flex;
+      color: #cce7ff;
+    }
+  }
+
   @media (max-width: 720px) {
     .social-links {
       display: none;

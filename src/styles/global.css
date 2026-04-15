@@ -1,14 +1,66 @@
 :root {
-	--primary: #1a1867;
-	--secondary: #dddde0;
-	--accent: #466f8f;
+	/* Brand colors */
+	--primary: #333333;
+	--secondary: #d0d0d0;
+	--accent: #555555;
 	--black: #0d0d0d;
 	--white: #f7f7f7;
-	--text-white: #ebe9fc;
-	--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
+	--text-white: #f0f0f0;
+
+	/* Semantic theme tokens (light mode defaults) */
+	--bg: #f7f7f7;
+	--surface: #ffffff;
+	--text: #0d0d0d;
+	--text-muted: #555555;
+	--heading-color: #111111;
+	--link-color: #333333;
+	--code-bg: #e5e5e5;
+	--border-color: #c0c0c0;
+	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08);
+	--research-note-bg: #fffce3;
+	--research-note-border: #e9db8d;
+
 	--font-body: "Satoshi", sans-serif;
 	--font-heading: "Nebula Sans", sans-serif;
 	--font-size-base: 18px;
+}
+
+/* Dark mode via explicit toggle */
+[data-theme="dark"] {
+	--primary: #1a1a1a;
+	--secondary: #1c1c1c;
+	--accent: #888888;
+	--bg: #121212;
+	--surface: #1c1c1c;
+	--text: #e8e8e8;
+	--text-muted: #999999;
+	--heading-color: #ffffff;
+	--link-color: #aaaaaa;
+	--code-bg: #282828;
+	--border-color: #333333;
+	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+	--research-note-bg: #a8c8e8;
+	--research-note-border: #5a9fc2;
+}
+
+/* Dark mode via system preference (when no explicit override is set) */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--primary: #1a1a1a;
+		--secondary: #1c1c1c;
+		--accent: #afafaf;
+		--bg: #121212;
+		--surface: #1c1c1c;
+		--text: #e8e8e8;
+		--text-muted: #999999;
+		--heading-color: #ffffff;
+		--link-color: #f1f1f1;
+		--code-bg: #282828;
+		--border-color: #333333;
+		--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+		--research-note-bg: #a4d2ff3d;
+		--research-note-border: #5a9fc2;
+	}
 }
 /* ========================================= */
 /* 1. SATOSHI (Body Text)                    */
@@ -84,11 +136,11 @@ body {
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: var(--white);
+	background: var(--bg);
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--white));
+	color: var(--text);
 	font-size: 20px;
 	line-height: 1.7;
 	display: flex;
@@ -111,7 +163,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--heading-color);
 	line-height: 1.2;
 	font-family: var(--font-heading);
 }
@@ -135,7 +187,7 @@ b {
 	font-weight: 700;
 }
 a {
-	color: var(--black);
+	color: var(--link-color);
 }
 a:hover {
 	color: var(--accent);
@@ -163,7 +215,7 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	background-color: var(--code-bg);
 	border-radius: 2px;
 }
 pre {
@@ -181,7 +233,7 @@ blockquote {
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--accent));
+	border-top: 1px solid var(--border-color);
 }
 @media (max-width: 720px) {
 	body {
@@ -210,7 +262,39 @@ hr {
 	white-space: nowrap;
 }
 
-/* src/styles/global.css */
+/* Explicit dark mode overrides for header/footer (Astro scoped style fallback) */
+[data-theme="dark"] header,
+[data-theme="dark"] footer {
+	background-color: #1c1c1c !important;
+}
+[data-theme="dark"] header nav a,
+[data-theme="dark"] header nav h2 a,
+[data-theme="dark"] header .theme-toggle {
+	color: #e8e8e8 !important;
+}
+[data-theme="dark"] header .theme-toggle .icon-moon {
+	color: #cce7ff !important;
+}
+/* Light mode sun color (global fallback) */
+header .theme-toggle .icon-sun {
+	color: #f59e0b;
+	margin-bottom: 4px;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) header,
+	:root:not([data-theme="light"]) footer {
+		background-color: #1c1c1c !important;
+	}
+	:root:not([data-theme="light"]) header nav a,
+	:root:not([data-theme="light"]) header nav h2 a,
+	:root:not([data-theme="light"]) header .theme-toggle {
+		color: #e8e8e8 !important;
+	}
+	:root:not([data-theme="light"]) header .theme-toggle .icon-moon {
+		color: #cce7ff !important;
+		margin-bottom: 4px;
+	}
+}
 
 /* 1. Reset the container padding */
 .astro-code {
@@ -234,10 +318,10 @@ hr {
 /* 4. The Highlight Style */
 /* 4. The Highlight Style */
 .astro-code .line.highlighted {
-	/* Yellowish marker color with transparency */
-	background-color: rgba(255, 222, 100, 0.15);
+	/* Gray highlight with transparency */
+	background-color: rgba(150, 150, 150, 0.15);
 	/* Matching solid marker border */
-	border-left-color: #ffd60a;
+	border-left-color: #888888;
 }
 
 .sr-only {
@@ -250,4 +334,23 @@ hr {
 	clip: rect(0, 0, 0, 0);
 	white-space: nowrap;
 	border-width: 0;
+}
+
+/* ResearchNote component */
+.research-note {
+	margin: 2rem 0;
+	border-left: 4px solid var(--research-note-border);
+	background-color: var(--research-note-bg);
+	padding: 1rem;
+	border-radius: 0 0.5rem 0.5rem 0;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.research-note-title {
+	color: var(--heading-color);
+	font-weight: 700;
+	font-size: 1.1em;
+	margin: 0 0 0.5rem 0;
+}
+.research-note-body {
+	color: var(--text);
 }
