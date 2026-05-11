@@ -1,329 +1,494 @@
+/* =============================================
+   Lab Notebook — Design tokens
+   ============================================= */
 :root {
-	/* Brand colors */
-	--primary: #333333;
-	--secondary: #d0d0d0;
-	--accent: #555555;
-	--black: #0d0d0d;
-	--white: #f7f7f7;
-	--text-white: #f0f0f0;
+	--paper: #ece8dd;
+	--paper-tint: #e3dcc9;
+	--rule: #c8bba4;
+	--rule-soft: #d8cdb6;
+	--ink: #15110a;
+	--ink-soft: #3c352a;
+	--muted: #7a6f5e;
+	--accent: #15110a;
+	--accent-soft: rgba(21, 17, 10, 0.08);
+	--serif: 'Spectral', Georgia, 'Times New Roman', serif;
+	--mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+	--maxw: 1080px;
+	--gutter: clamp(24px, 5.2vw, 56px);
 
-	/* Semantic theme tokens (light mode defaults) */
-	--bg: #f7f7f7;
-	--surface: #ffffff;
-	--text: #0d0d0d;
-	--text-muted: #555555;
-	--heading-color: #111111;
-	--link-color: #333333;
-	--code-bg: #e5e5e5;
-	--border-color: #c0c0c0;
-	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08);
-	--research-note-bg: #fffce3;
-	--research-note-border: #e9db8d;
-
-	--font-body: "Satoshi", sans-serif;
-	--font-heading: "Nebula Sans", sans-serif;
-	--font-size-base: 18px;
+	/* Compatibility aliases used in BlogPost/ResearchNote */
+	--bg: var(--paper);
+	--surface: var(--paper-tint);
+	--text: var(--ink);
+	--text-muted: var(--muted);
+	--heading-color: var(--ink);
+	--border-color: var(--rule);
+	--code-bg: var(--accent-soft);
+	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.05);
+	--research-note-bg: var(--accent-soft);
+	--research-note-border: var(--accent);
 }
 
-/* Dark mode via explicit toggle */
 [data-theme="dark"] {
-	--primary: #1a1a1a;
-	--secondary: #1c1c1c;
-	--accent: #888888;
-	--bg: #121212;
-	--surface: #1c1c1c;
-	--text: #e8e8e8;
-	--text-muted: #999999;
-	--heading-color: #ffffff;
-	--link-color: #aaaaaa;
-	--code-bg: #282828;
-	--border-color: #333333;
-	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
-	--research-note-bg: #a8c8e8;
-	--research-note-border: #5a9fc2;
+	--paper: #161310;
+	--paper-tint: #1d1915;
+	--rule: #3a3328;
+	--rule-soft: #2a2520;
+	--ink: #ebe3d2;
+	--ink-soft: #c7bda8;
+	--muted: #8c8270;
+	--accent: #ebe3d2;
+	--accent-soft: rgba(235, 227, 210, 0.08);
+
+	--bg: var(--paper);
+	--surface: var(--paper-tint);
+	--text: var(--ink);
+	--text-muted: var(--muted);
+	--heading-color: var(--ink);
+	--border-color: var(--rule);
+	--code-bg: rgba(235, 227, 210, 0.08);
+	--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+	--research-note-bg: rgba(235, 227, 210, 0.08);
+	--research-note-border: var(--accent);
 }
 
-/* Dark mode via system preference (when no explicit override is set) */
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) {
-		--primary: #1a1a1a;
-		--secondary: #1c1c1c;
-		--accent: #afafaf;
-		--bg: #121212;
-		--surface: #1c1c1c;
-		--text: #e8e8e8;
-		--text-muted: #999999;
-		--heading-color: #ffffff;
-		--link-color: #f1f1f1;
-		--code-bg: #282828;
-		--border-color: #333333;
-		--box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
-		--research-note-bg: #a4d2ff3d;
-		--research-note-border: #5a9fc2;
-	}
-}
-/* ========================================= */
-/* 1. SATOSHI (Body Text)                    */
-/* ========================================= */
-
-/* Regular */
-@font-face {
-	font-family: "Satoshi";
-	src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
-/* Italic */
-@font-face {
-	font-family: "Satoshi";
-	src: url("/fonts/Satoshi-Italic.woff2") format("woff2");
-	font-weight: 400;
-	font-style: italic;
-	font-display: swap;
-}
-
-/* Note: You didn't show a Satoshi-Bold file. 
-   If you add one later, copy the block above and change weight to 700. */
-
-/* ========================================= */
-/* 2. NEBULA SANS (Headings)                 */
-/* ========================================= */
-
-/* Medium -> We map this to 'normal' (400) so it is the default for headers */
-@font-face {
-	font-family: "Nebula Sans";
-	src: url("/fonts/NebulaSans-Medium.woff2") format("woff2");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
-/* Medium Italic */
-@font-face {
-	font-family: "Nebula Sans";
-	src: url("/fonts/NebulaSans-MediumItalic.woff2") format("woff2");
-	font-weight: 400;
-	font-style: italic;
-	font-display: swap;
-}
-
-/* Bold */
-@font-face {
-	font-family: "Nebula Sans";
-	src: url("/fonts/NebulaSans-Bold.woff2") format("woff2");
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
-
-/* Bold Italic */
-@font-face {
-	font-family: "Nebula Sans";
-	src: url("/fonts/NebulaSans-BoldItalic.woff2") format("woff2");
-	font-weight: 700;
-	font-style: italic;
-	font-display: swap;
-}
-
-/* ========================================= */
-/* 3. APPLY VARIABLES                        */
-/* ========================================= */
+/* =============================================
+   Base
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
-	font-family: var(--font-body);
 	margin: 0;
 	padding: 0;
-	text-align: left;
-	background: var(--bg);
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: var(--text);
-	font-size: 20px;
-	line-height: 1.7;
+	background: var(--paper);
+	background-image: radial-gradient(rgba(120, 90, 50, 0.045) 1px, transparent 1px);
+	background-size: 26px 26px;
+	color: var(--ink);
+	font-family: var(--serif);
+	font-size: 17px;
+	line-height: 1.65;
 	display: flex;
 	flex-direction: column;
-
-	/* Force it to be at least the height of the screen */
 	min-height: 100vh;
+	transition: background-color 0.25s ease, color 0.25s ease;
 }
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
-	flex: 1;
+
+[data-theme="dark"] body {
+	background-image: radial-gradient(rgba(235, 227, 210, 0.035) 1px, transparent 1px);
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 0 0 0.5rem 0;
-	color: var(--heading-color);
-	line-height: 1.2;
-	font-family: var(--font-heading);
-}
-h1 {
-	font-size: 3.052em;
-}
-h2 {
-	font-size: 2.441em;
-}
-h3 {
-	font-size: 1.953em;
-}
-h4 {
-	font-size: 1.563em;
-}
-h5 {
-	font-size: 1.25em;
-}
-strong,
-b {
-	font-weight: 700;
-}
+
 a {
-	color: var(--link-color);
-}
-a:hover {
 	color: var(--accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
 }
-p {
-	margin-bottom: 1em;
+a:hover { opacity: 0.72; }
+
+p { margin-bottom: 1em; }
+strong, b { font-weight: 600; }
+img { max-width: 100%; height: auto; border-radius: 8px; }
+table { width: 100%; }
+textarea { width: 100%; font-size: 16px; font-family: var(--mono); }
+input { font-size: 16px; }
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--serif);
+	color: var(--ink);
+	line-height: 1.2;
+	margin: 0 0 0.5rem 0;
 }
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: var(--code-bg);
-	border-radius: 2px;
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-}
-pre > code {
-	all: unset;
-}
+
 blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.333em;
+	margin: 1.5em 0;
+	padding: 0 1.25em;
+	border-left: 2px solid var(--accent);
+	font-style: italic;
+	color: var(--ink);
+	font-size: 19px;
+	line-height: 1.55;
 }
+
 hr {
 	border: none;
-	border-top: 1px solid var(--border-color);
-}
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
+	border-top: 1px solid var(--rule);
+	margin: 28px 0;
 }
 
-.sr-only {
+/* =============================================
+   Layout containers
+   ============================================= */
+.nb-container {
+	max-width: var(--maxw);
+	margin: 0 auto;
+	padding: 0 var(--gutter);
+}
+
+.nb-page {
+	max-width: var(--maxw);
+	margin: 0 auto;
+	padding: 0 var(--gutter) 48px;
+	flex: 1;
+}
+
+main { flex: 1; }
+
+/* =============================================
+   Hairlines
+   ============================================= */
+.nb-rule {
+	border: none;
+	border-top: 1px solid var(--rule);
+	margin: 28px 0;
+}
+.nb-rule-soft {
+	border: none;
+	border-top: 1px solid var(--rule-soft);
+	margin: 22px 0;
+}
+
+/* =============================================
+   Typography scale
+   ============================================= */
+.nb-h1 {
+	font-family: var(--serif);
+	font-size: clamp(36px, 5vw, 54px);
+	font-weight: 400;
+	letter-spacing: -0.015em;
+	line-height: 1.1;
+	color: var(--ink);
+	text-wrap: pretty;
+	margin: 0;
+}
+.nb-h2 {
+	font-family: var(--serif);
+	font-weight: 500;
+	font-style: italic;
+	font-size: 22px;
+	color: var(--ink);
+	margin: 0;
+}
+.nb-italic {
+	font-style: italic;
+	color: var(--accent);
+	font-weight: 400;
+}
+.nb-eyebrow {
+	font-family: var(--mono);
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+.nb-lede {
+	font-size: 18px;
+	line-height: 1.65;
+	color: var(--ink-soft);
+	max-width: 640px;
+	margin: 0;
+}
+
+/* =============================================
+   Prose body (posts + about)
+   ============================================= */
+.nb-prose { max-width: 680px; }
+.nb-prose p { font-size: 18px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 1.05em; }
+.nb-prose p:first-of-type { font-size: 19.5px; color: var(--ink); }
+.nb-prose a { color: var(--accent); }
+.nb-prose blockquote {
+	margin: 1.5em 0;
+	padding: 0 1.25em;
+	border-left: 2px solid var(--accent);
+	font-style: italic;
+	color: var(--ink);
+	font-size: 19px;
+	line-height: 1.55;
+}
+.nb-prose ul { padding-left: 1.2em; margin: 0 0 1.1em; color: var(--ink-soft); }
+.nb-prose li { margin: 0 0 0.35em; }
+.nb-prose code {
+	font-family: var(--mono);
+	font-size: 0.9em;
+	padding: 1px 6px;
+	background: var(--accent-soft);
+	border-radius: 3px;
+}
+.nb-prose h2 {
+	font-family: var(--serif);
+	font-weight: 500;
+	font-size: 28px;
+	letter-spacing: -0.01em;
+	margin: 1.8em 0 0.6em;
+	color: var(--ink);
+}
+.nb-prose strong { font-weight: 600; color: var(--ink); }
+
+/* =============================================
+   Tags
+   ============================================= */
+.nb-tag {
+	font-family: var(--mono);
+	font-size: 10px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+	padding: 2px 9px;
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	display: inline-block;
+	white-space: nowrap;
+	text-decoration: none;
+}
+.nb-tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* =============================================
+   Marginalia column
+   ============================================= */
+.nb-margin {
+	font-family: var(--mono);
+	font-size: 10.5px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--muted);
+	line-height: 1.95;
+	padding-top: 6px;
+}
+.nb-margin-label { color: var(--accent); font-weight: 600; display: block; }
+.nb-margin-meta { color: var(--muted); display: block; }
+.nb-margin-meta a { color: inherit; text-decoration: none; }
+.nb-margin-meta a:hover { color: var(--accent); opacity: 1; }
+.nb-margin-gap { height: 18px; }
+
+.nb-margin-filter {
+	display: block;
+	background: none;
 	border: 0;
 	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+	text-align: left;
+	font-family: var(--mono);
+	font-size: 10.5px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--muted);
+	cursor: pointer;
+	line-height: 1.95;
+}
+.nb-margin-filter:hover { color: var(--ink); }
+.nb-margin-filter[aria-current="true"] { color: var(--accent); font-weight: 600; }
+
+/* =============================================
+   Entry rows
+   ============================================= */
+.nb-entries { list-style: none; padding: 0; margin: 0; }
+
+.nb-entry {
+	position: relative;
+	display: grid;
+	grid-template-columns: 48px 1fr 70px;
+	gap: 28px;
+	padding: 20px 0;
+	border-top: 1px solid var(--rule-soft);
+	align-items: baseline;
+}
+.nb-entry:first-child { border-top-color: var(--rule); }
+
+.nb-entry-num {
+	font-family: var(--mono);
+	font-size: 12px;
+	color: var(--accent);
+	letter-spacing: 0.1em;
+	padding-top: 6px;
+}
+.nb-entry-body { min-width: 0; }
+
+.nb-entry-title {
+	font-family: var(--serif);
+	font-size: 23px;
+	font-weight: 500;
+	color: var(--ink);
+	margin-bottom: 5px;
+	letter-spacing: -0.005em;
+	text-decoration: none;
+	display: block;
+}
+.nb-entry-title::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+}
+.nb-entry-title:hover { opacity: 0.72; }
+
+.nb-entry-desc { font-size: 15.5px; color: var(--ink-soft); line-height: 1.55; max-width: 620px; }
+
+.nb-entry-date {
+	font-family: var(--mono);
+	text-align: right;
+	color: var(--ink);
+	line-height: 1.1;
+	padding-top: 4px;
+}
+.nb-entry-day { font-family: var(--serif); font-size: 28px; font-weight: 500; }
+.nb-entry-mon {
+	font-size: 11px;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--accent);
+	margin-top: 3px;
+}
+.nb-entry-yr {
+	font-size: 10px;
+	letter-spacing: 0.18em;
+	color: var(--muted);
+	margin-top: 2px;
 }
 
-/* Explicit dark mode overrides for header/footer (Astro scoped style fallback) */
-[data-theme="dark"] header,
-[data-theme="dark"] footer {
-	background-color: #1c1c1c !important;
+/* =============================================
+   Section header row
+   ============================================= */
+.nb-section-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-bottom: 14px;
 }
-[data-theme="dark"] header nav a,
-[data-theme="dark"] header nav h2 a,
-[data-theme="dark"] header .theme-toggle {
-	color: #e8e8e8 !important;
+.nb-link-meta {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	padding: 0;
+	color: var(--accent);
+	font-family: var(--mono);
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	text-decoration: none;
+	display: inline-block;
 }
-[data-theme="dark"] header .theme-toggle .icon-moon {
-	color: #cce7ff !important;
-}
-/* Light mode sun color (global fallback) */
-header .theme-toggle .icon-sun {
-	color: #f59e0b;
-	margin-bottom: 4px;
-}
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) header,
-	:root:not([data-theme="light"]) footer {
-		background-color: #1c1c1c !important;
-	}
-	:root:not([data-theme="light"]) header nav a,
-	:root:not([data-theme="light"]) header nav h2 a,
-	:root:not([data-theme="light"]) header .theme-toggle {
-		color: #e8e8e8 !important;
-	}
-	:root:not([data-theme="light"]) header .theme-toggle .icon-moon {
-		color: #cce7ff !important;
-		margin-bottom: 4px;
-	}
+.nb-link-meta:hover { opacity: 0.72; }
+
+/* =============================================
+   Grid layouts (hero / blog index / post / about)
+   ============================================= */
+.nb-hero,
+.nb-blogindex-grid,
+.nb-post-grid,
+.nb-about-grid {
+	display: grid;
+	grid-template-columns: 180px 1fr;
+	gap: 36px;
+	align-items: start;
+	padding-top: 8px;
 }
 
-/* 1. Reset the container padding */
-.astro-code {
-	padding: 1rem 0 !important; /* Keep vertical padding, kill horizontal */
-	overflow-x: auto;
+/* =============================================
+   Now/Reading strip
+   ============================================= */
+.nb-now {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 48px;
 }
-
-/* 2. Force the code element to be a grid */
-.astro-code code {
-	display: grid; /* Makes lines act like rows in a spreadsheet */
-	min-width: 100%; /* Ensures it expands if text is long */
+.nb-now-list {
+	list-style: none;
+	padding: 0;
+	margin: 12px 0 0;
+	font-size: 16px;
+	color: var(--ink-soft);
+	line-height: 1.85;
 }
+.nb-now-list em { font-style: italic; color: var(--ink); }
 
-/* 3. Style the lines */
+/* =============================================
+   Post: back link, meta, prev/next nav
+   ============================================= */
+.nb-back {
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	font-family: var(--mono);
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+	text-decoration: none;
+	display: inline-block;
+}
+.nb-back:hover { color: var(--accent); opacity: 1; }
+
+.nb-post-meta {
+	font-family: var(--mono);
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--muted);
+	margin-top: 18px;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.nb-dot { color: var(--rule); }
+
+.nb-postnav { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.nb-link-title {
+	display: block;
+	margin-top: 4px;
+	font-family: var(--serif);
+	font-style: italic;
+	font-size: 19px;
+	color: var(--ink);
+	text-decoration: none;
+}
+.nb-postnav > div:last-child .nb-link-title { text-align: right; }
+.nb-link-title:hover { color: var(--accent); opacity: 1; }
+
+/* =============================================
+   ResearchNote MDX component
+   ============================================= */
+.research-note {
+	margin: 2rem 0;
+	border-left: 2px solid var(--accent);
+	background-color: var(--accent-soft);
+	padding: 1rem;
+	border-radius: 0 0.5rem 0.5rem 0;
+}
+.research-note-title {
+	color: var(--ink);
+	font-weight: 600;
+	font-size: 1.1em;
+	margin: 0 0 0.5rem 0;
+}
+.research-note-body { color: var(--ink-soft); }
+
+/* =============================================
+   Code blocks
+   ============================================= */
+code {
+	font-family: var(--mono);
+	padding: 2px 5px;
+	background-color: var(--accent-soft);
+	border-radius: 3px;
+	font-size: 0.9em;
+}
+pre { padding: 1.5em; border-radius: 8px; overflow-x: auto; }
+pre > code { all: unset; }
+
+.astro-code { padding: 1rem 0 !important; overflow-x: auto; }
+.astro-code code { display: grid; min-width: 100%; }
 .astro-code .line {
 	display: block;
-	padding: 0 1.5rem; /* Move the horizontal padding here */
-	border-left: 4px solid transparent; /* Reserve space for the marker */
+	padding: 0 1.5rem;
+	border-left: 4px solid transparent;
 }
-
-/* 4. The Highlight Style */
-/* 4. The Highlight Style */
 .astro-code .line.highlighted {
-	/* Gray highlight with transparency */
 	background-color: rgba(150, 150, 150, 0.15);
-	/* Matching solid marker border */
-	border-left-color: #888888;
+	border-left-color: var(--muted);
 }
 
+/* =============================================
+   Utilities
+   ============================================= */
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -336,21 +501,20 @@ header .theme-toggle .icon-sun {
 	border-width: 0;
 }
 
-/* ResearchNote component */
-.research-note {
-	margin: 2rem 0;
-	border-left: 4px solid var(--research-note-border);
-	background-color: var(--research-note-bg);
-	padding: 1rem;
-	border-radius: 0 0.5rem 0.5rem 0;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-.research-note-title {
-	color: var(--heading-color);
-	font-weight: 700;
-	font-size: 1.1em;
-	margin: 0 0 0.5rem 0;
-}
-.research-note-body {
-	color: var(--text);
+/* =============================================
+   Mobile
+   ============================================= */
+@media (max-width: 720px) {
+	.nb-hero,
+	.nb-blogindex-grid,
+	.nb-post-grid,
+	.nb-about-grid {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+	.nb-margin { padding-bottom: 4px; }
+	.nb-now { grid-template-columns: 1fr; gap: 32px; }
+	.nb-entry { grid-template-columns: 36px 1fr 56px; gap: 12px; }
+	.nb-postnav { grid-template-columns: 1fr; gap: 16px; }
+	.nb-postnav > div:last-child .nb-link-title { text-align: left; }
 }

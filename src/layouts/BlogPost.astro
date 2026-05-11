@@ -1,58 +1,30 @@
 ---
-import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
-import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags?: string[];
+  num?: string;
+  older?: { id: string; data: { title: string } } | null;
+  newer?: { id: string; data: { title: string } } | null;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, tags = [], num, older, newer } = Astro.props;
+
+const day = pubDate.toLocaleString("en-US", { day: "numeric" });
+const mon = pubDate.toLocaleString("en-US", { month: "short" });
+const year = pubDate.toLocaleString("en-US", { year: "numeric" });
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
-    <style>
-      main {
-        width: calc(100% - 2em);
-        max-width: 100%;
-        margin: 0;
-      }
-      .hero-image {
-        width: 100%;
-      }
-      .hero-image img {
-        display: block;
-        margin: 0 auto;
-        border-radius: 12px;
-        box-shadow: var(--box-shadow);
-      }
-      .prose {
-        width: 720px;
-        max-width: calc(100% - 2em);
-        margin: auto;
-        padding: 1em;
-        color: var(--text);
-      }
-      .title {
-        margin-bottom: 1em;
-        padding: 1em 0;
-        text-align: center;
-        line-height: 1;
-      }
-      .title h1 {
-        margin: 0 0 0.5em 0;
-      }
-      .date {
-        margin-bottom: 0.5em;
-        color: var(--text-muted);
-      }
-      .last-updated-on {
-        font-style: italic;
-      }
-    </style>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
@@ -60,36 +32,85 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       crossorigin="anonymous"
     />
   </head>
-
   <body>
     <Header />
-    <main>
-      <article>
-        <div class="hero-image">
-          {
-            heroImage && (
-              <Image width={1020} height={510} src={heroImage} alt="" />
-            )
-          }
-        </div>
-        <div class="prose">
-          <div class="title">
-            <div class="date">
-              <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
-            </div>
-            <h1>{title}</h1>
-            <hr />
+    <main class="nb-page">
+      <hr class="nb-rule" style="margin-top: 0;" />
+
+      <div class="nb-post-grid">
+        <aside class="nb-margin">
+          {num && (
+            <>
+              <span class="nb-margin-label">§ entry · {num}</span>
+              <div class="nb-margin-gap"></div>
+            </>
+          )}
+          <span class="nb-margin-label">Date</span>
+          <span class="nb-margin-meta">{day} {mon} {year}</span>
+          {updatedDate && (
+            <span class="nb-margin-meta" style="font-style: italic;">
+              upd. {updatedDate.toLocaleString("en-US", { month: "short", year: "numeric" })}
+            </span>
+          )}
+          {tags.length > 0 && (
+            <>
+              <div class="nb-margin-gap"></div>
+              <span class="nb-margin-label">Tags</span>
+              {tags.map(t => <span class="nb-margin-meta">· {t}</span>)}
+            </>
+          )}
+          <div class="nb-margin-gap"></div>
+          <span class="nb-margin-label">Cite</span>
+          <span class="nb-margin-meta" style="text-transform: none; letter-spacing: .02em; font-style: italic; line-height: 1.55;">
+            Gutierrez, G. B. ({year}). "{title}." <em>Research notebook</em>.
+          </span>
+        </aside>
+
+        <article>
+          <a href="/blog" class="nb-back">← Back to index</a>
+          <h1 class="nb-h1" style="font-size: clamp(30px, 4vw, 44px); margin-top: 14px;">{title}</h1>
+          <div class="nb-post-meta">
+            <span>{day} {mon} {year}</span>
+            <span class="nb-dot">·</span>
+            <span>by Gabriel</span>
+            {tags.length > 0 && (
+              <>
+                <span class="nb-dot">·</span>
+                <div class="nb-tag-row" style="display: inline-flex;">
+                  {tags.map(t => <span class="nb-tag">{t}</span>)}
+                </div>
+              </>
+            )}
           </div>
-          <slot />
-        </div>
-      </article>
+
+          <hr class="nb-rule" />
+
+          <div class="nb-prose">
+            <slot />
+          </div>
+
+          {(older || newer) && (
+            <nav class="nb-postnav" style="margin-top: 36px;" aria-label="Post navigation">
+              <div>
+                {older && (
+                  <>
+                    <div class="nb-eyebrow">← Older</div>
+                    <a href={`/blog/${older.id}/`} class="nb-link-title">{older.data.title}</a>
+                  </>
+                )}
+              </div>
+              <div>
+                {newer && (
+                  <>
+                    <div class="nb-eyebrow" style="text-align: right;">Newer →</div>
+                    <a href={`/blog/${newer.id}/`} class="nb-link-title">{newer.data.title}</a>
+                  </>
+                )}
+              </div>
+            </nav>
+          )}
+        </article>
+      </div>
     </main>
     <Footer />
   </body>

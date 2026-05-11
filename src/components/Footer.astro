@@ -1,29 +1,43 @@
 ---
-const today = new Date();
-import HeaderLink from "./HeaderLink.astro";
+const pathname = Astro.url.pathname;
+let folio = "n.";
+if (pathname === "/" || pathname === "") folio = "001";
+else if (pathname === "/blog" || pathname === "/blog/") folio = "002";
+else if (pathname === "/about" || pathname === "/about/") folio = "003";
+else if (pathname.startsWith("/blog/")) folio = "n.";
 ---
 
-<footer>
-  &copy; {today.getFullYear()} Gabriel B Gutierrez. All rights reserved.
+<footer class="nb-site-footer">
+  <div class="nb-container nb-footer-inner">
+    <hr class="nb-rule" style="margin-bottom: 20px; margin-top: 0;" />
+    <div class="nb-footer">
+      <span>© 2026 G. B. Gutierrez · Lightly opinionated.</span>
+      <span class="nb-footer-right">folio · {folio}</span>
+    </div>
+  </div>
 </footer>
+
 <style>
-  footer {
-    padding: 2em 1em;
-    background-color: var(--secondary);
-    color: var(--text);
-    text-align: center;
+  .nb-site-footer {
+    background: transparent;
   }
-  .social-links {
+  .nb-footer-inner {
+    padding-bottom: 28px;
+  }
+  .nb-footer {
     display: flex;
-    justify-content: center;
-    gap: 1em;
-    margin-top: 1em;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
-  .social-links a {
-    text-decoration: none;
-    color: var(--text-muted);
-  }
-  .social-links a:hover {
-    color: var(--text);
+  .nb-footer-right { color: var(--accent); }
+
+  @media (max-width: 480px) {
+    .nb-footer { flex-direction: column; gap: 8px; align-items: flex-start; }
   }
 </style>

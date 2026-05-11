@@ -1,57 +1,96 @@
 ---
-import Layout from "../layouts/BlogPost.astro";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { SITE_TITLE } from "../consts";
 ---
 
-<Layout
-  title="About Me"
-  description="PhD researcher in Computer Science focusing on weakly supervised semantic segmentation"
-  pubDate={new Date("February 05 2026")}
->
-  <p>
-    I am a PhD student in Computer Science currently based in Campinas, Brazil,
-    where I conduct my research at the University of Campinas (UNICAMP). This
-    blog is an extension of my academic life, but behind the papers, code, and
-    experiments there is someone genuinely curious about how complex systems
-    learn, fail, and adapt.
-  </p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`About — ${SITE_TITLE}`}
+      description="PhD researcher in Computer Science focusing on weakly supervised semantic segmentation"
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="nb-page">
+      <hr class="nb-rule" style="margin-top: 0;" />
 
-  <p>
-    My background is in machine learning and computer vision, with several years
-    of experience working on applied research problems that sit at the
-    intersection of theory, engineering, and real-world constraints. During my
-    doctoral studies, my work has increasingly focused on semantic segmentation
-    under weak supervision, aiming to reduce the reliance on dense, fully
-    annotated datasets while still producing robust and meaningful
-    representations.
-  </p>
+      <div class="nb-about-grid">
+        <aside class="nb-margin">
+          <span class="nb-margin-label">§ about</span>
+          <span class="nb-margin-meta">Campinas, BR</span>
+          <span class="nb-margin-meta">UNICAMP / IC</span>
+          <span class="nb-margin-meta">PhD, year ii</span>
+          <div class="nb-margin-gap"></div>
+          <span class="nb-margin-label">Languages</span>
+          <span class="nb-margin-meta">pt-br · native</span>
+          <span class="nb-margin-meta">en · daily</span>
+          <span class="nb-margin-meta">ja · n5, studying</span>
+          <div class="nb-margin-gap"></div>
+          <span class="nb-margin-label">Elsewhere</span>
+          <span class="nb-margin-meta">
+            <a href="https://github.com/GabrielBG0" target="_blank" rel="noopener noreferrer">github</a>
+          </span>
+          <span class="nb-margin-meta">
+            <a href="https://scholar.google.com/citations?user=g6yM01cAAAAJ" target="_blank" rel="noopener noreferrer">scholar</a>
+          </span>
+          <span class="nb-margin-meta">
+            <a href="mailto:gabriel.gutierrez@ic.unicamp.br">email</a>
+          </span>
+        </aside>
 
-  <p>
-    Prior to and alongside my PhD, I have worked extensively with seismic data,
-    particularly in the context of seismic facies segmentation. This domain has
-    shaped the way I think about machine learning research: data is noisy,
-    labels are expensive and imperfect, and evaluation is rarely as clean as
-    benchmark datasets suggest. I expect seismic applications to remain a
-    recurring testbed for my research ideas and methodologies.
-  </p>
+        <div>
+          <div class="nb-eyebrow">About me</div>
+          <h1 class="nb-h1" style="font-size: clamp(30px, 4.5vw, 48px); margin-top: 8px;">
+            A short page about the person <br /><em class="nb-italic">behind the notes.</em>
+          </h1>
 
-  <p>
-    I am also the creator and technical lead of an open research framework
-    developed within my academic context, aimed at supporting reproducible
-    machine learning experimentation and scalable research workflows. This work
-    reflects my focus on clean abstractions, extensibility, and the practical
-    realities of running large experimental pipelines, and it continues to
-    evolve alongside my research activities. The framework is openly available
-    <a
-      href="https://github.com/discovery-unicamp/Minerva"
-      target="_blank"
-      rel="noopener noreferrer">here</a
-    >.
-  </p>
-  <p>
-    I work primarily in Portuguese and English, with Portuguese being my native
-    language and English used daily for research, writing, and collaboration. I
-    also have foundational knowledge of Japanese, supported by JLPT N5
-    certification, and continue to study the language as a long-term personal
-    and cultural interest.
-  </p>
-</Layout>
+          <hr class="nb-rule" />
+
+          <div class="nb-prose">
+            <p>
+              I am a PhD student in Computer Science at UNICAMP, in Campinas, Brazil. This blog is
+              an extension of my academic life, but behind the papers, code, and experiments there is
+              someone genuinely curious about how complex systems learn, fail, and adapt.
+            </p>
+            <p>
+              My background is in machine learning and computer vision, with a few years of
+              applied research at the intersection of theory, engineering, and the messy parts of
+              real data. During the doctorate I have leaned more and more into <em>semantic
+              segmentation under weak supervision</em>, trying to reduce the reliance on dense,
+              fully annotated datasets while still producing robust, meaningful representations.
+            </p>
+            <p>
+              A lot of my taste was shaped by working with <strong>seismic data</strong>, specifically
+              facies segmentation. Seismic teaches you, fairly quickly, that data is noisy,
+              labels are expensive and imperfect, and evaluation is rarely as clean as benchmark
+              numbers suggest. I expect to keep using seismic as a recurring testbed.
+            </p>
+            <p>
+              I am also the creator and technical lead of <a href="https://github.com/discovery-unicamp/Minerva" target="_blank" rel="noopener noreferrer">Minerva</a>,
+              an open research framework developed within my group to support reproducible ML
+              experimentation and scalable workflows. It reflects my interest in clean abstractions,
+              extensibility, and the practical realities of running large experimental pipelines.
+            </p>
+            <p>
+              I work in Portuguese and English, with Portuguese being my native language. I also
+              study Japanese (JLPT N5, slowly working toward N4), partly as a long-term personal
+              project, partly because it is nice to think in a different grammar once in a while.
+            </p>
+
+            <h2>Get in touch</h2>
+            <p>
+              I like talking about research, formally or otherwise. If something here resonates,
+              if you are working on similar problems, or if you would just like to compare notes,
+              please feel free to <a href="mailto:gabriel.gutierrez@ic.unicamp.br">reach out</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

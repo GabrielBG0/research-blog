@@ -1,8 +1,31 @@
 ---
+import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const allPosts = (await getCollection("blog")).sort(
+  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+);
+const postsWithNum = allPosts.map((post, i) => ({
+  ...post,
+  num: String(i + 1).padStart(2, "0"),
+}));
+const recent = [...postsWithNum].reverse().slice(0, 4);
+
+const latestDate = allPosts.at(-1)?.data.pubDate;
+const updatedStr = latestDate
+  ? latestDate.toLocaleString("en-US", { day: "numeric", month: "short", year: "numeric" })
+  : "";
+
+function dateParts(date: Date) {
+  return {
+    day: date.toLocaleString("en-US", { day: "numeric" }),
+    mon: date.toLocaleString("en-US", { month: "short" }),
+    year: date.toLocaleString("en-US", { year: "numeric" }),
+  };
+}
 ---
 
 <!doctype html>
@@ -12,34 +35,104 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
   </head>
   <body>
     <Header />
-    <main>
-      <h1>Hi, I’m Gabriel!</h1>
+    <main class="nb-page">
+      <hr class="nb-rule" style="margin-top: 0;" />
 
-      <p>
-        This is my research blog, where I document my PhD work in Computer
-        Science. Here I share research notes, technical write-ups, experimental
-        insights, and reflections that emerge from my doctoral studies.
-      </p>
+      <!-- Hero -->
+      <section class="nb-hero">
+        <aside class="nb-margin">
+          <span class="nb-margin-label">§ 01 · About</span>
+          <span class="nb-margin-meta">Campinas, BR</span>
+          <span class="nb-margin-meta">UNICAMP / IC</span>
+          <span class="nb-margin-meta">PhD, year ii</span>
+          <div class="nb-margin-gap"></div>
+          <span class="nb-margin-label">Drifting through</span>
+          <span class="nb-margin-meta">weak supervision</span>
+          <span class="nb-margin-meta">dense prediction</span>
+          <span class="nb-margin-meta">seismic facies</span>
+          {updatedStr && (
+            <>
+              <div class="nb-margin-gap"></div>
+              <span class="nb-margin-label">Updated</span>
+              <span class="nb-margin-meta">{updatedStr}</span>
+            </>
+          )}
+        </aside>
 
-      <p>
-        My current research focuses on weak supervision for semantic
-        segmentation, with an emphasis on learning reliable dense
-        representations under limited, noisy, or indirect supervision. I am
-        particularly interested in understanding how different weak signals,
-        such as partial annotations, proxies, or priors, can be leveraged to
-        scale segmentation systems beyond fully supervised settings. This work
-        builds on my prior experience with seismic data analysis and seismic
-        facies segmentation, a domain I expect to continue exploring as both a
-        motivating application and a source of challenging real-world
-        constraints.
-      </p>
+        <div class="nb-hero-body">
+          <div class="nb-eyebrow">A slow, public notebook</div>
+          <h1 class="nb-h1" style="margin-top: 10px;">
+            Hi, I'm <em class="nb-italic">Gabriel</em>.<br />
+            This is where I think<br />
+            out loud about my <em class="nb-italic">PhD</em>.
+          </h1>
+          <p class="nb-lede" style="margin-top: 26px;">
+            Mostly a place to keep myself honest. I leave papers I'm reading here, half-finished
+            ideas, and the kind of small experiments that don't make it into a publication but
+            still feel worth writing down. Updates come when they come, there's no schedule.
+          </p>
+          <p class="nb-lede" style="margin-top: 14px; color: var(--muted);">
+            If we share an interest in weak supervision, segmentation, or just doing research
+            slowly and in the open, you're in the right corner of the internet.
+          </p>
+        </div>
+      </section>
 
-      <p>
-        This space is intentionally focused on my academic work. Content is
-        written primarily for researchers, students, and practitioners
-        interested in modern machine learning systems and representation
-        learning.
-      </p>
+      <hr class="nb-rule" />
+
+      <!-- Recent entries -->
+      <section>
+        <div class="nb-section-head">
+          <h2 class="nb-h2">Recent entries</h2>
+          <a href="/blog" class="nb-link-meta">All notes &nbsp;→</a>
+        </div>
+        <ol class="nb-entries">
+          {recent.map(post => {
+            const { day, mon, year } = dateParts(post.data.pubDate);
+            return (
+              <li class="nb-entry">
+                <div class="nb-entry-num">{post.num}</div>
+                <div class="nb-entry-body">
+                  <a href={`/blog/${post.id}/`} class="nb-entry-title">{post.data.title}</a>
+                  <div class="nb-entry-desc">{post.data.description}</div>
+                  {post.data.tags && post.data.tags.length > 0 && (
+                    <div class="nb-tag-row" style="margin-top: 10px;">
+                      {post.data.tags.map(t => <span class="nb-tag">{t}</span>)}
+                    </div>
+                  )}
+                </div>
+                <div class="nb-entry-date">
+                  <div class="nb-entry-day">{day}</div>
+                  <div class="nb-entry-mon">{mon}</div>
+                  <div class="nb-entry-yr">{year}</div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+
+      <hr class="nb-rule" />
+
+      <!-- Now / Reading strip -->
+      <section class="nb-now">
+        <div>
+          <div class="nb-eyebrow">Lately reading</div>
+          <ul class="nb-now-list">
+            <li>· <em>Beyond Empirical Risk Minimization</em>, for the n-th time</li>
+            <li>· Two preprints on annotator-disagreement modeling</li>
+            <li>· A book on geological prior, kept on the desk for vibes</li>
+          </ul>
+        </div>
+        <div>
+          <div class="nb-eyebrow">Quietly working on</div>
+          <ul class="nb-now-list">
+            <li>· A small framework for partial-label segmentation</li>
+            <li>· Reproducibility tooling for the <em>Minerva</em> stack</li>
+            <li>· The next note (no promises on when)</li>
+          </ul>
+        </div>
+      </section>
     </main>
     <Footer />
   </body>

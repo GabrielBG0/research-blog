@@ -1,114 +1,145 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+const allPosts = (await getCollection("blog")).sort(
+  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
 );
+const postsWithNum = allPosts.map((post, i) => ({
+  ...post,
+  num: String(i + 1).padStart(2, "0"),
+}));
+const displayPosts = [...postsWithNum].reverse();
+
+const allTags = Array.from(new Set(allPosts.flatMap(p => p.data.tags ?? [])));
+
+const firstDate = allPosts.at(0)?.data.pubDate;
+const latestDate = allPosts.at(-1)?.data.pubDate;
+
+function dateParts(date: Date) {
+  return {
+    day: date.toLocaleString("en-US", { day: "numeric" }),
+    mon: date.toLocaleString("en-US", { month: "short" }),
+    year: date.toLocaleString("en-US", { year: "numeric" }),
+  };
+}
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={`Notes — ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="nb-page">
+      <hr class="nb-rule" style="margin-top: 0;" />
+
+      <div class="nb-blogindex-grid">
+        <aside class="nb-margin">
+          <span class="nb-margin-label">§ 02 · Notes</span>
+          <span class="nb-margin-meta">{allPosts.length} {allPosts.length === 1 ? "entry" : "entries"}</span>
+          {firstDate && (
+            <span class="nb-margin-meta">
+              first · {firstDate.toLocaleString("en-US", { month: "short", year: "numeric" })}
+            </span>
+          )}
+          {latestDate && (
+            <span class="nb-margin-meta">
+              latest · {latestDate.toLocaleString("en-US", { month: "short", year: "numeric" })}
+            </span>
+          )}
+          {allTags.length > 0 && (
+            <>
+              <div class="nb-margin-gap"></div>
+              <span class="nb-margin-label">Filter</span>
+              <button class="nb-margin-filter" data-tag="all" aria-current="true">all</button>
+              {allTags.map(tag => (
+                <button class="nb-margin-filter" data-tag={tag}>{tag}</button>
+              ))}
+            </>
+          )}
+        </aside>
+
+        <div>
+          <div class="nb-eyebrow">Index of entries</div>
+          <h1 class="nb-h1" style="font-size: clamp(30px, 4.5vw, 48px); margin-top: 8px;">
+            All notes, <em class="nb-italic">in reverse</em><br />chronological order.
+          </h1>
+          <p class="nb-lede" style="margin-top: 22px;">
+            A growing archive. Each entry is dated and tagged. Nothing has been edited after
+            posting except for typos and the occasional factual correction.
+          </p>
+
+          <hr class="nb-rule" />
+
+          <ol class="nb-entries" id="nb-entries-list">
+            {displayPosts.map(post => {
+              const { day, mon, year } = dateParts(post.data.pubDate);
+              return (
+                <li
+                  class="nb-entry"
+                  data-tags={(post.data.tags ?? []).join(",")}
+                >
+                  <div class="nb-entry-num">{post.num}</div>
+                  <div class="nb-entry-body">
+                    <a href={`/blog/${post.id}/`} class="nb-entry-title">{post.data.title}</a>
+                    <div class="nb-entry-desc">{post.data.description}</div>
+                    {post.data.tags && post.data.tags.length > 0 && (
+                      <div class="nb-tag-row" style="margin-top: 10px;">
+                        {post.data.tags.map(t => <span class="nb-tag">{t}</span>)}
+                      </div>
+                    )}
+                  </div>
+                  <div class="nb-entry-date">
+                    <div class="nb-entry-day">{day}</div>
+                    <div class="nb-entry-mon">{mon}</div>
+                    <div class="nb-entry-yr">{year}</div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          <p id="nb-no-results" style="display:none; color: var(--muted); font-style: italic; padding: 24px 0;">
+            Nothing under that tag yet, try another.
+          </p>
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </body>
 </html>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>(".nb-margin-filter");
+  const entries = document.querySelectorAll<HTMLLIElement>(".nb-entry");
+  const noResults = document.getElementById("nb-no-results");
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filterBtns.forEach(b => b.removeAttribute("aria-current"));
+      btn.setAttribute("aria-current", "true");
+
+      const tag = btn.dataset.tag ?? "all";
+      let visible = 0;
+
+      entries.forEach(entry => {
+        if (tag === "all") {
+          entry.style.display = "";
+          visible++;
+        } else {
+          const tags = entry.dataset.tags?.split(",").filter(Boolean) ?? [];
+          const show = tags.includes(tag);
+          entry.style.display = show ? "" : "none";
+          if (show) visible++;
+        }
+      });
+
+      if (noResults) noResults.style.display = visible === 0 ? "" : "none";
+    });
+  });
+</script>
